@@ -730,6 +730,58 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * Las estructuras WFCDecision, decisions, CopyDomains()
              * y Collapse() se proporcionan como herramientas.
              */
+            
+            //Mientras la cantidad de backtracks no exeda el limite maximo
+            if (Backtracks >= maxBacktracks)
+            {
+                Phase = WFCPhase.LimitReached;
+                return;
+            }
+
+            //Mientras se puedan recuperar decisiones
+            // es decir, las decisiones recuperables sean mayor que 0
+            while (decisions.Count > 0) //decisions -> historial de elecciones recuperables.
+            {
+                WFCDecision decision = decisions.Peek();
+
+                // Si la decision recuperada no tiene alternativas retrocedemos 
+                //denuevo 
+                if(decision.remaining == null || decision.remaining.Count == 0)
+                {
+                    decisions.Pop();
+                    continue;
+                }
+
+                // Restauramos el estado anterior para no modificar el snapshot actual
+                domains = CopyDomains(decision.snapshot);
+                // Incrementamos la cantidad de backtracks hechos
+                Backtracks++;
+
+                //Calculamos los pesos del estado recuperado al que retrocedimos
+                //y removemos aquellas alternativas que no tengan un peso positivo
+                //para evitar alternativas peores a la de nuestro estado actual
+                double[] weights = GetWeights(decision.cell.x, decision.cell.y);
+                decision.remaining.RemoveAll(t => weights[t] <= 0);
+
+                // Si ya quedan alternativas para retroceder lo sacamos de la cola
+                if ( decision.remaining.Count == 0)
+                {
+                    decisions.Pop();
+                }
+
+                // aqui dejaremos de intentar el mismo tile
+                int chose = ChooseWeightedPattern(decision.remaining, weights);
+                decision.remaining.Remove(chose);
+
+                if ( decision.remaining.Count == 0)
+                {
+                    decisions.Pop();
+                    continue;
+                }
+
+                Collapse(decision.cell, chose);
+                return;
+            }
 
             Phase = WFCPhase.Failed;
             Status = "Pendiente: implementar Backtrack().";
