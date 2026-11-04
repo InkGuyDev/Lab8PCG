@@ -319,10 +319,7 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
                 {
                     for (int y = 0; y < count; y++)
                     {
-                        if (compatible[d, x, y] == true)
-                        {
-                            compatible [d, x, y] = (TileSet.Counts[d,x,y] > 0);
-                        }
+                        compatible [d, x, y] = (TileSet.Counts[d,x,y] > 0);   
                     }
                 }
             }
@@ -469,27 +466,38 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * CalculateEntropy() y ChooseWeightedPattern() ya
              * utilizan los valores que devuelve este metodo.
              */
+            
+            var Sums = new double[tileSet.Tiles.Count];
 
             for (int d = 0; d < Connections; d++)
             {
                 int ny = y + WFCTileSet.Offsets[d].y;
                 int nx = x + WFCTileSet.Offsets[d].x;
 
-                if(IsInBounds(nx, ny))
+                int neighborTile = GetResolvedTile(nx, ny);
+
+                if(neighborTile >= 0)
                 {
-                    //Si el dominio tiene una sola solución
-                    if (domains[nx, ny].Count == 1)
-                    {
-                        int neighborTile = domains[nx,ny][0];
-                        validNeighbors++;
+                    //Si el dominio tiene una sola solución           
+                    int neighborToCell = WFCTileSet.Opposite(d);
+                    validNeighbors++;
                         
-                        foreach(int candidate in domains[x, y]){
-                            //Calculo de la probabilidad manualmente
-                            weights[candidate] += tileSet.Weights[neighborTile, GetResolvedTile(nx,ny), candidate]/validNeighbors;
-                        }
+                    foreach(int candidate in domains[x, y])
+                    {
+                        //Calculo de la probabilidad manualmente
+                        Sums[candidate] += tileSet.Weights[neighborToCell, neighborTile, candidate];
                     }
                 }
             }
+
+            if (validNeighbors > 0)
+            {
+                foreach (int i in domains[x, y])
+                {
+                    weights[i] = Sums[i] / validNeighbors;
+                }
+            }
+
             return weights;
         }
 

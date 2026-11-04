@@ -249,14 +249,14 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * - Cada posicion aporta una aparicion a un solo tile.
              * - Global() ya transforma estos conteos a probabilidades.
              */
-            int p = 0;
+            /*int p = 0;
             int r = 0;
             int a = 0;
             int b = 0;
 
-            for(int y = 0; y< Height; y++)
+            for(int y = 0; y < Width; y++)
             {
-                for (int x = 0; x<Width; x++)
+                for (int x = 0; x < Height; x++)
                 {
                     switch (matrix[x, y]) {
                         case 'P':
@@ -279,7 +279,19 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
             frequencies[0] = p;
             frequencies[1] = r;
             frequencies[2] = a;
-            frequencies[3] = b;
+            frequencies[3] = b;*/
+
+            int width = matrix.GetLength(0);
+            int height = matrix.GetLength(1);
+
+            for(int y = 0; y < width; y++)
+            {
+                for (int x = 0; x < height; x++)
+                {
+                    int tileIndex = matrix[x, y];
+                    frequencies[tileIndex]++;
+                }
+            }
 
             return frequencies;
         }
@@ -323,9 +335,9 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * que no se observaron en esa muestra.
              */
 
-            for(int y = 0; y < height; y++)
+            for(int y = 0; y < width; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < height; x++)
                 {
                     int ActualPos = matrix[x, y];
 
@@ -383,7 +395,7 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              */
 
             //Por cada dirección
-            for (int d = 0; d < Offsets.Length; d++)
+            for (int d = 0; d < 8; d++)
             {
                 //Se rescata la posición de origen
                 for(int origin = 0; origin < tiles.Count; origin++)
@@ -399,7 +411,7 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
                     {
                         for(int neighbor = 0; neighbor < tiles.Count; neighbor++)
                         {
-                            probabilities[d, neighbor, totalCounts] = (double)counts[d,origin,neighbor];
+                            probabilities[d, origin, neighbor] = (double)counts[d,origin,neighbor] / totalCounts;
                         }
                     }
                 }
