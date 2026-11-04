@@ -219,7 +219,6 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
                 }
             }
             
-            // XD
             return matrix;
         }
 
@@ -250,8 +249,37 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * - Cada posicion aporta una aparicion a un solo tile.
              * - Global() ya transforma estos conteos a probabilidades.
              */
+            int p = 0;
+            int r = 0;
+            int a = 0;
+            int b = 0;
 
-            
+            for(int y = 0; y< Height; y++)
+            {
+                for (int x = 0; x<Width; x++)
+                {
+                    switch (matrix[x, y]) {
+                        case 'P':
+                            p++;
+                            break;
+                        case 'R':
+                            r++;
+                            break;
+                        case 'A':
+                            a++;
+                            break;
+                        case 'B':
+                            b++;
+                            break;
+                    }
+                }
+            }
+
+            //Se asigna cada frequencia a la tabla
+            frequencies[0] = p;
+            frequencies[1] = r;
+            frequencies[2] = a;
+            frequencies[3] = b;
 
             return frequencies;
         }
@@ -295,6 +323,32 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * que no se observaron en esa muestra.
              */
 
+            for(int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int ActualPos = matrix[x, y];
+
+                    //Recorre el vecindario
+                    for(int d = 0; d < Offsets.Length; d++)
+                    {
+                        //Calculamos coordenadas de los vecinos
+                        int ny = y+ Offsets[d].y;
+                        int nx = x+ Offsets[d].x;
+
+                        //Verifica que esté dentro de la matriz
+                        if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                        {
+                            int neighborPos = matrix[nx, ny]; // Tile vecino
+
+                            // Registrar la relación incrementando el contador correspondiente
+                            counts[d, ActualPos, neighborPos]++;
+                        }
+                    }
+                }
+            }
+
+
             return counts;
         }
 
@@ -327,6 +381,30 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * - Contemplar contextos sin observaciones disponibles.
              * - El resultado debe ser util para Cardinal y Moore.
              */
+
+            //Por cada dirección
+            for (int d = 0; d < Offsets.Length; d++)
+            {
+                //Se rescata la posición de origen
+                for(int origin = 0; origin < tiles.Count; origin++)
+                {
+                    int totalCounts = 0;
+                    for (int neighbor =0; neighbor < tiles.Count; neighbor++)
+                    {
+                        //Total de vecinos del origen especifico observado
+                        totalCounts += counts[d, origin, neighbor];
+                    }
+
+                    if (totalCounts > 0)
+                    {
+                        for(int neighbor = 0; neighbor < tiles.Count; neighbor++)
+                        {
+                            probabilities[d, neighbor, totalCounts] = (double)counts[d,origin,neighbor];
+                        }
+                    }
+                }
+
+            }
 
             return probabilities;
         }

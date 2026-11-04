@@ -352,7 +352,7 @@ namespace Laboratorios.Lab7.WaveFunctionCollapse
                             continue;
                         }
 
-                        //Comparacion entre tileA y tileB segun la dirección
+                        //Comparacion entre tileA y tileB segun la direcciï¿½n
                         compatible[d, a, b] = tileA.IsCompatible(tileB, direction);
                     }
                 }
@@ -438,7 +438,7 @@ namespace Laboratorios.Lab7.WaveFunctionCollapse
             Phase = WFCPhase.Propagating;
             //Status = "Pendiente: Observe().";
 
-            Status = "Observación realizada. Propagando...";
+            Status = "Observaciï¿½n realizada. Propagando...";
 
             return true;
         }
@@ -697,7 +697,7 @@ namespace Laboratorios.Lab7.WaveFunctionCollapse
             if (Phase != WFCPhase.Completed && Phase != WFCPhase.Contradiction)
             {
                 Phase = WFCPhase.ReadyToObserve;
-                Status = "Propagación finalizada. Listo para la siguiente observación.";
+                Status = "Propagaciï¿½n finalizada. Listo para la siguiente observaciï¿½n.";
             }
             return true;
         }
@@ -836,18 +836,18 @@ namespace Laboratorios.Lab7.WaveFunctionCollapse
                     }
                     else if (domainCount > 1)
                     {
-                        // CASO B: Celda no resuelta (superposición) ->
-                        // Opcion simple: Mostrar el Sprite del primer patrón candidato pero semitransparente
+                        // CASO B: Celda no resuelta (superposiciï¿½n) ->
+                        // Opcion simple: Mostrar el Sprite del primer patrï¿½n candidato pero semitransparente
                         int sampleTileIndex = domains[x, y][0];
                         WFCTile sampleTile = currentTileSet.Tiles[sampleTileIndex];
 
                         sr.sprite = sampleTile.sprite;
-                        // Ajustamos el Alpha (A) para indicar que aún no está resuelta
+                        // Ajustamos el Alpha (A) para indicar que aï¿½n no estï¿½ resuelta
                         sr.color = new Color(1f, 1f, 1f, 0.25f);
                     }
                     else if (domainCount == 0)
                     {
-                        // CASO C: Contradicción -> Mostrar en rojo o transparente sin sprite
+                        // CASO C: Contradicciï¿½n -> Mostrar en rojo o transparente sin sprite
                         sr.sprite = null;
                     }
                 }
@@ -881,7 +881,7 @@ namespace Laboratorios.Lab7.WaveFunctionCollapse
                     GameObject cellObj = Instantiate(tilePrefab, worldPos, Quaternion.identity, gridParent);
                     cellObj.name = $"Cell_({x},{y})";
 
-                    // Ajustar el tamaño del GameObject según cellSize
+                    // Ajustar el tamaï¿½o del GameObject segï¿½n cellSize
                     cellObj.transform.localScale = Vector3.one * cellSize;
 
                     SpriteRenderer sr = cellObj.GetComponent<SpriteRenderer>();
@@ -953,13 +953,13 @@ namespace Laboratorios.Lab7.WaveFunctionCollapse
                     }
                     else if (count > 1)
                     {
-                        // Celda con múltiples opciones -> Blanco/Transparente
+                        // Celda con mï¿½ltiples opciones -> Blanco/Transparente
                         Gizmos.color = new Color(1f, 1f, 1f, 0.3f);
                         Gizmos.DrawWireCube(pos, Vector3.one * cellSize * 0.9f);
                     }
                     else if (count == 0)
                     {
-                        // Contradicción -> Rojo
+                        // Contradicciï¿½n -> Rojo
                         Gizmos.color = Color.red;
                         Gizmos.DrawCube(pos, Vector3.one * cellSize * 0.9f);
                     }

@@ -313,6 +313,19 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * - El orden de la pareja y su direccion importan.
              * - Las reglas deben provenir del entrenamiento.
              */
+            for(int d = 0; d < Connections; d++)
+            {
+                for (int x = 0; x < count; x++)
+                {
+                    for (int y = 0; y < count; y++)
+                    {
+                        if (compatible[d, x, y] == true)
+                        {
+                            compatible [d, x, y] = (TileSet.Counts[d,x,y] > 0);
+                        }
+                    }
+                }
+            }
         }
 
         // 3. Observacion
@@ -428,6 +441,7 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
         {
             var weights = new double[tileSet.Tiles.Count];
 
+            int validNeighbors = 0;
             if (!IsInitialized || !IsInBounds(x, y))
             {
                 return weights;
@@ -456,6 +470,26 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * utilizan los valores que devuelve este metodo.
              */
 
+            for (int d = 0; d < Connections; d++)
+            {
+                int ny = y + WFCTileSet.Offsets[d].y;
+                int nx = x + WFCTileSet.Offsets[d].x;
+
+                if(IsInBounds(nx, ny))
+                {
+                    //Si el dominio tiene una sola solución
+                    if (domains[nx, ny].Count == 1)
+                    {
+                        int neighborTile = domains[nx,ny][0];
+                        validNeighbors++;
+                        
+                        foreach(int candidate in domains[x, y]){
+                            //Calculo de la probabilidad manualmente
+                            weights[candidate] += tileSet.Weights[neighborTile, GetResolvedTile(nx,ny), candidate]/validNeighbors;
+                        }
+                    }
+                }
+            }
             return weights;
         }
 
