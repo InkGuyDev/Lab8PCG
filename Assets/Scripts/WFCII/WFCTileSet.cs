@@ -200,7 +200,26 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              *
              * La matriz devuelta debe tener las dimensiones leidas.
              */
+            
+            // Height tiene la cantidad de filas, así que usamos un ciclo for
+            // para iterar (recorrer) toda la filas (r es de rows) (hola :v)
+            for (int r = 0; r < height; r++)
+            {
+                // convertimos el formato de ordenamiento de los archivos csv
+                // al de unity
+                int y = height - 1 - r;
+                string[] row = rows[r];
 
+
+                for (int x = 0; x < width; x++)
+                {
+                    // Creamos la matriz de posiciones usando el diccionario
+                    // con los simbolos previamente inicializados 
+                    matrix[x, y] = symbols[row[x]]; 
+                }
+            }
+            
+            // XD
             return matrix;
         }
 
@@ -231,6 +250,8 @@ namespace Laboratorios.Lab10.WaveFunctionCollapse
              * - Cada posicion aporta una aparicion a un solo tile.
              * - Global() ya transforma estos conteos a probabilidades.
              */
+
+            
 
             return frequencies;
         }
